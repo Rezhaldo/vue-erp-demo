@@ -12,7 +12,11 @@
     "noUncheckedSideEffectImports": true,
 
     "jsx": "preserve",
-    "types": ["vite/client"]
+    "types": ["vite/client"],
+    "baseUrl": ".",
+    "paths": {
+      "@shared/*": ["src/shared/*"]
+    }
   },
   "include": ["src/**/*.ts", "src/**/*.vue"]
 }
