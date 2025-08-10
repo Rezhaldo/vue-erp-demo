@@ -107,7 +107,7 @@ import {
   ListboxOptions,
 } from "@headlessui/vue";
 import { PencilSquareIcon, PlusIcon, TrashIcon } from "@heroicons/vue/24/solid";
-import { computed, defineEmits, ref } from "vue";
+import { computed, ref } from "vue";
 import { toast } from "vue3-toastify";
 import { deleteProduct } from "../api/use-delete-product";
 import { useGetCategories } from "../api/use-get-categories";
