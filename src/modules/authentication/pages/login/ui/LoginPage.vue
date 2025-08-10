@@ -44,6 +44,7 @@
 </template>
 
 <script setup lang="ts">
+import { useAuthStore } from "@/stores/user-store";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { toast } from "vue3-toastify";
@@ -54,20 +55,33 @@ const router = useRouter();
 const username = ref<string>("emilys");
 const password = ref<string>("emilyspass");
 
+const authStore = useAuthStore();
+
 async function handleSubmit() {
   try {
     const data = await login({
       username: username.value,
       password: password.value,
     });
-    console.log("✅ Login Success", data);
-    router.push("/dashboard");
 
-    // TODO: navigate to dashboard or store token
+    const { accessToken, refreshToken, ...userData } = data;
+    const user = {
+      id: userData.id,
+      username: userData.username,
+      email: userData.email,
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      gender: userData.gender,
+      image: userData.image,
+    };
+
+    authStore.login({ accessToken, refreshToken, user });
+
+    router.push("/dashboard");
+    toast.success("Login Successful!");
   } catch (error: any) {
     toast.error(error?.message || "Login failed ❌");
     console.error("❌ Login Failed", error);
-    // TODO: show toast notification
   }
 }
 </script>
