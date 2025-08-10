@@ -20,6 +20,12 @@
           >
             <component :is="(item as NavItem).icon" class="h-5 w-5" />
             {{ (item as NavItem).label }}
+            <span
+              v-if="item.label === 'Cart' && cart.totalItems > 0"
+              class="ml-auto bg-green-200 text-black text-xs font-bold px-2 py-0.5 rounded-full"
+            >
+              {{ cart.totalItems }}
+            </span>
           </router-link>
         </li>
       </ul>
@@ -80,11 +86,15 @@
 </template>
 
 <script setup lang="ts">
+import { useCartStore } from "@/stores/cart-store";
+import { useAuthStore } from "@/stores/user-store";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/vue";
 import { BriefcaseIcon, UserIcon } from "@heroicons/vue/24/outline";
-import { defineEmits, defineProps, onMounted, ref } from "vue";
+import { defineProps, onMounted, ref } from "vue";
 import "./Sidebar.scss";
+
 const emit = defineEmits(["toggleSidebar"]);
+const cart = useCartStore();
 
 // Props from parent:
 interface NavItem {
@@ -100,19 +110,24 @@ const { isSidebarOpen, navItems } = defineProps<{
 
 const userImage = ref<string | null>(null);
 const userName = ref<string>("");
+const authStore = useAuthStore();
 
 onMounted(() => {
-  const storedUser = localStorage.getItem("user");
-  if (storedUser) {
-    const user = JSON.parse(storedUser);
-    userImage.value = user.image;
-    // userName.value = `${user.firstName} ${user.lastName}`;
+  if (authStore && authStore.user !== null) {
+    const userData = authStore.user;
+    try {
+      userImage.value = userData.image;
+      userName.value = `${userData.firstName} ${userData.lastName}`;
+    } catch (error) {
+      console.error("Error parsing user data:", error);
+    }
+  } else {
+    console.log("No valid user data found.");
   }
 });
 
-function logout() {
-  localStorage.removeItem("accessToken");
-  localStorage.removeItem("user");
+const logout = () => {
+  authStore.logout();
   window.location.href = "/login";
-}
+};
 </script>
