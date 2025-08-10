@@ -1,15 +1,15 @@
-import tailwindcss from '@tailwindcss/vite';
-import vue from '@vitejs/plugin-vue';
-import path from 'node:path';
-import { defineConfig } from 'vite';
+import tailwindcss from "@tailwindcss/vite";
+import vue from "@vitejs/plugin-vue";
+import path from "node:path";
+import { defineConfig } from "vite";
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [vue(), tailwindcss(),
-],
+  plugins: [vue(), tailwindcss()],
   resolve: {
-		alias: {
-			'@shared': path.resolve(__dirname, 'src/shared'),
-		},
-	},
-})
+    alias: {
+      "@": path.resolve(__dirname, "src"),
+      "@shared": path.resolve(__dirname, "src/shared"),
+    },
+  },
+});
